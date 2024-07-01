@@ -1,7 +1,15 @@
+import argv
 import gleam/io
-import internal/basic_usage
+import gleam/result
+import internal/validate_argument.{validate_argument}
 
 pub fn main() {
-  basic_usage.basic_usage()
-  io.println("Hello from computorv1!")
+  let argument =
+    validate_argument(argv.load().arguments)
+    |> result.map_error(fn(error) {
+      io.println(error)
+      panic
+    })
+    |> result.unwrap("")
+  io.println(argument)
 }
