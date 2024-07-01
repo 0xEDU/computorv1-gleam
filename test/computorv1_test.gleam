@@ -22,13 +22,18 @@ pub fn validate_argument_correct_size_test() {
   |> should.equal(input)
 }
 
-pub fn parse_invalid_argument_test() {
+pub fn parse_argument_invalid_test() {
   parse_argument("invalid")
   |> should.be_error()
   |> fn(error) {
     case error {
-      parse_argument.GenericError -> success
+      parse_argument.InvalidCharError -> success
       _ -> should.fail()
     }
   }
+}
+
+pub fn parse_argument_valid1_test() {
+  parse_argument("X")
+  |> should.be_ok()
 }
