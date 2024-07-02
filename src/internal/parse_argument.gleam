@@ -11,23 +11,23 @@ pub type ParsingError {
   GenericError
 }
 
-fn is_valid_char(c: String) -> Result(Nil, ParsingError) {
+fn is_valid_char(c: String) -> Bool {
   case c {
-    "X" -> Ok(Nil)
-    _ -> Error(InvalidCharError)
+    "X" -> True
+    _ -> False
   }
 }
 
 fn has_invalid_chars(argument: String) -> Result(Nil, ParsingError) {
   let valid = case string.to_graphemes(argument) {
     [first, ..] -> is_valid_char(first)
-    [] -> Ok(Nil)
+    [] -> True
   }
   let len = string.length(argument)
   case valid {
-    Ok(Nil) if len != 0 -> has_invalid_chars(string.drop_left(argument, 1))
-    Ok(Nil) -> Ok(Nil)
-    Error(e) -> Error(e)
+    True if len != 0 -> has_invalid_chars(string.drop_left(argument, 1))
+    True -> Ok(Nil)
+    False -> Error(InvalidCharError)
   }
 }
 
