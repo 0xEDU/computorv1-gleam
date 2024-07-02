@@ -1,6 +1,7 @@
 import gleeunit
 import gleeunit/should
 import internal/parse_argument.{type ParsingError, parse_argument}
+import internal/tokenize.{tokenize}
 import internal/utils.{strip_whitespaces}
 import internal/validate_argument.{validate_argument}
 
@@ -47,4 +48,26 @@ pub fn parse_argument_valid1_test() {
 pub fn parse_argument_valid2_test() {
   parse_argument("5 * X^0 + 4 * X^1 - 9.3 * X^2 = 1 * X^0")
   |> should.be_ok()
+}
+
+pub fn tokenize_invalid1_test() {
+  tokenize("5*X^0+4*X^1-9.3*X^2")
+  |> should.be_error
+}
+
+pub fn tokenize_invalid2_test() {
+  tokenize("*^+*^-.*=^")
+  |> should.be_error
+}
+
+pub fn tokenize1_test() {
+  tokenize("5*X^0+4*X^1-9.3*X^2=1*X^0")
+  |> should.be_ok
+  |> should.equal(["5*X^0", "4*X^1", "-9.3*X^2", "=", "1*X^0"])
+}
+
+pub fn tokenize2_test() {
+  tokenize("5+4*X+X^2=X^2")
+  |> should.be_ok
+  |> should.equal(["5", "4*X", "X^2", "=", "X^2"])
 }
