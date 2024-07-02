@@ -19,11 +19,3 @@ pub fn tokenize(expression: String) -> Result(List(String), TokenizeError) {
     _ -> Error(InvalidExpressionError)
   }
 }
-
-// validate tokens
-// invert the sign of the tokens AFTER "="
-// reduce the equation
-// print it
-// get the polynomial degree, print it
-// try to solve the equation if the polynomial degree is equal or less than 2
-// print solution

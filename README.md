@@ -23,3 +23,14 @@ gleam run   # Run the project
 gleam test  # Run the tests
 gleam shell # Run an Erlang shell
 ```
+
+
+## TODO:
+
+* validate tokens
+* invert the sign of the tokens AFTER "="
+* reduce the equation
+* print it
+* get the polynomial degree, print it
+* try to solve the equation if the polynomial degree is equal or less than 2
+* print solution
