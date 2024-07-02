@@ -1,6 +1,7 @@
 import gleeunit
 import gleeunit/should
 import internal/parse_argument.{type ParsingError, parse_argument}
+import internal/utils.{strip_whitespaces}
 import internal/validate_argument.{validate_argument}
 
 const success = Nil
@@ -20,6 +21,11 @@ pub fn validate_argument_correct_size_test() {
   validate_argument([input])
   |> should.be_ok()
   |> should.equal(input)
+}
+
+pub fn strip_whitespace_test() {
+  utils.strip_whitespaces("a b c")
+  |> should.equal("abc")
 }
 
 pub fn parse_argument_invalid_test() {

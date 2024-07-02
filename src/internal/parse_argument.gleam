@@ -1,5 +1,6 @@
 import gleam/string
-import gleam/result
+import gleam/int
+import internal/utils
 
 pub type SecondDegreeEquation {
   SecondDegreeEquation(a: Int, b: Int, c: Int)
@@ -11,10 +12,18 @@ pub type ParsingError {
   GenericError
 }
 
+fn is_num(c: String) -> Bool {
+  let res = int.base_parse(c, 10)
+  case res {
+    Ok(_) -> True
+    _ -> False
+  }
+}
+
 fn is_valid_char(c: String) -> Bool {
   case c {
-    "X" -> True
-    _ -> False
+    "X" | "*" | "/" | "+" | "-" | "." | "^" | "=" -> True
+    _ -> is_num(c)
   }
 }
 
@@ -34,6 +43,7 @@ fn has_invalid_chars(argument: String) -> Result(Nil, ParsingError) {
 pub fn parse_argument(
   argument: String,
 ) -> Result(SecondDegreeEquation, ParsingError) {
+  let argument = utils.strip_whitespaces(argument)
   let res = has_invalid_chars(argument)
 
   case res {
