@@ -37,3 +37,8 @@ pub fn parse_argument_valid1_test() {
   parse_argument("X")
   |> should.be_ok()
 }
+
+pub fn parse_argument_valid2_test() {
+  parse_argument("5 * X^0 + 4 * X^1 - 9.3 * X^2 = 1 * X^0")
+  |> should.be_ok()
+}
