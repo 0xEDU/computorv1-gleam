@@ -24,10 +24,12 @@ gleam test  # Run the tests
 gleam shell # Run an Erlang shell
 ```
 
+## DONE:
+
+* validate tokens
 
 ## TODO:
 
-* validate tokens
 * invert the sign of the tokens AFTER "="
 * reduce the equation
 * print it
