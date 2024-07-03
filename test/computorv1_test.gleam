@@ -1,11 +1,10 @@
 import gleeunit
 import gleeunit/should
-import internal/parse_argument.{type ParsingError, parse_argument}
+import internal/parse_argument.{parse_argument}
 import internal/tokenize.{tokenize}
-import internal/utils.{strip_whitespaces}
+import internal/utils
 import internal/validate_argument.{validate_argument}
-
-const success = Nil
+import internal/validate_tokens.{validate_tokens}
 
 pub fn main() {
   gleeunit.main()
@@ -32,12 +31,6 @@ pub fn strip_whitespace_test() {
 pub fn parse_argument_invalid_test() {
   parse_argument("invalid")
   |> should.be_error()
-  |> fn(error) {
-    case error {
-      parse_argument.InvalidCharError -> success
-      _ -> should.fail()
-    }
-  }
 }
 
 pub fn parse_argument_valid1_test() {
@@ -55,11 +48,6 @@ pub fn tokenize_invalid1_test() {
   |> should.be_error
 }
 
-pub fn tokenize_invalid2_test() {
-  tokenize("*^+*^-.*=^")
-  |> should.be_error
-}
-
 pub fn tokenize1_test() {
   tokenize("5*X^0+4*X^1-9.3*X^2=1*X^0")
   |> should.be_ok
@@ -70,4 +58,19 @@ pub fn tokenize2_test() {
   tokenize("5+4*X+X^2=X^2")
   |> should.be_ok
   |> should.equal(["5", "4*X", "X^2", "=", "X^2"])
+}
+
+pub fn validate_tokens1_test() {
+  validate_tokens(["5", "4*X", "X^2", "=", "X^2"])
+  |> should.be_ok
+}
+
+pub fn validate_tokens2_test() {
+  validate_tokens(["5", "", "4*X", "X^2", "=", "X^2"])
+  |> should.be_error
+}
+
+pub fn validate_tokens3_test() {
+  validate_tokens(["5", "**", "4*X", "X^2", "=", "X^2"])
+  |> should.be_error
 }

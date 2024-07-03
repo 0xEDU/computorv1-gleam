@@ -2,12 +2,6 @@ import gleam/int
 import gleam/string
 import internal/utils
 
-pub type ParsingError {
-  InvalidCharError
-  EmptyStringError
-  GenericError
-}
-
 fn is_num(c: String) -> Bool {
   let res = int.base_parse(c, 10)
   case res {
@@ -23,7 +17,7 @@ fn is_valid_char(c: String) -> Bool {
   }
 }
 
-fn has_invalid_chars(argument: String) -> Result(Nil, ParsingError) {
+fn has_invalid_chars(argument: String) -> Result(Nil, String) {
   let valid = case string.to_graphemes(argument) {
     [first, ..] -> is_valid_char(first)
     [] -> True
@@ -32,11 +26,11 @@ fn has_invalid_chars(argument: String) -> Result(Nil, ParsingError) {
   case valid {
     True if len != 0 -> has_invalid_chars(string.drop_left(argument, 1))
     True -> Ok(Nil)
-    False -> Error(InvalidCharError)
+    False -> Error("InvalidCharError")
   }
 }
 
-pub fn parse_argument(argument: String) -> Result(String, ParsingError) {
+pub fn parse_argument(argument: String) -> Result(String, String) {
   let argument = utils.strip_whitespaces(argument)
   let res = has_invalid_chars(argument)
 
