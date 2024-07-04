@@ -1,8 +1,16 @@
-import gleam/result
 import gleam/list
+import gleam/result
 
 pub fn invert_sign(tokens: List(String)) -> Result(List(String), String) {
-	tokens
-	|> list.filter(fn(token) { token != "=" })
-	|> Ok
+  let #(before, after) = list.split_while(tokens, fn(token) { token != "=" })
+  let new_after =
+    list.rest(after)
+    |> result.unwrap([""])
+    |> list.map(fn(token) {
+      case token {
+        "-" <> rest -> rest
+        _ -> "-" <> token
+      }
+    })
+  Ok(list.flatten([before, new_after]))
 }

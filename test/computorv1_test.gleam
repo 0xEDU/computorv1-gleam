@@ -112,7 +112,22 @@ pub fn validate_tokens9_test() {
   |> should.be_error
 }
 
-pub fn reduce_equation1_test() {
-  invert_sign(["-9.33*X*", "4*X", "X^2", "=", "X^2"])
-  |> should.equal(Ok(["-9.33*X*", "4*X", "X^2", "-X^2"]))
+pub fn invert_sign1_test() {
+  invert_sign(["-9.33*X", "4*X", "X^2", "=", "X^2"])
+  |> should.equal(Ok(["-9.33*X", "4*X", "X^2", "-X^2"]))
+}
+
+pub fn invert_sign2_test() {
+  invert_sign(["-9.33*X", "4*X", "X^2", "=", "X^2"])
+  |> should.equal(Ok(["-9.33*X", "4*X", "X^2", "-X^2"]))
+}
+
+pub fn invert_sign3_test() {
+  invert_sign(["-9.33*X*", "4*X", "X^2", "=", "X^2", "2*X^1"])
+  |> should.equal(Ok(["-9.33*X", "4*X", "X^2", "-X^2", "-2*X^1"]))
+}
+
+pub fn invert_sign4_test() {
+  invert_sign(["-9.33*X*", "4*X", "X^2", "=", "X^2", "-2*X^1"])
+  |> should.equal(Ok(["-9.33*X", "4*X", "X^2", "-X^2", "2*X^1"]))
 }
