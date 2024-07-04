@@ -5,6 +5,7 @@ import internal/tokenize.{tokenize}
 import internal/utils
 import internal/validate_argument.{validate_argument}
 import internal/validate_tokens.{validate_tokens}
+import internal/reduce_equation.{reduce_equation}
 
 pub fn main() {
   gleeunit.main()
@@ -109,4 +110,9 @@ pub fn validate_tokens8_test() {
 pub fn validate_tokens9_test() {
   validate_tokens(["-9.33*X*", "4*X", "X^2", "=", "X^2"])
   |> should.be_error
+}
+
+pub fn reduce_equation1_test() {
+  reduce_equation(["-9.33*X*", "4*X", "X^2", "=", "X^2"])
+  |> should.equal(Ok(["-9.33*X*", "4*X", "X^2", "-X^2"]))
 }
