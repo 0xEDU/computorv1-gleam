@@ -1,11 +1,11 @@
 import gleeunit
 import gleeunit/should
+import internal/invert_sign.{invert_sign}
 import internal/parse_argument.{parse_argument}
 import internal/tokenize.{tokenize}
 import internal/utils
 import internal/validate_argument.{validate_argument}
 import internal/validate_tokens.{validate_tokens}
-import internal/invert_sign.{invert_sign}
 
 pub fn main() {
   gleeunit.main()
@@ -53,7 +53,6 @@ pub fn tokenize_invalid2_test() {
   tokenize("5*X^0+4*X^1-=9.3=*X^2")
   |> should.be_error
 }
-
 
 pub fn tokenize1_test() {
   tokenize("5*X^0+4*X^1-9.3*X^2=1*X^0")

@@ -1,11 +1,11 @@
 import argv
 import gleam/io
 import gleam/result
+import internal/invert_sign.{invert_sign}
 import internal/parse_argument.{parse_argument}
 import internal/tokenize.{tokenize}
 import internal/validate_argument.{validate_argument}
 import internal/validate_tokens.{validate_tokens}
-import internal/invert_sign.{invert_sign}
 
 pub fn main() {
   let argument =
