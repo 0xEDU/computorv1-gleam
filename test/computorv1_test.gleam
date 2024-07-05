@@ -1,5 +1,6 @@
 import gleeunit
 import gleeunit/should
+import internal/convert_to_monomials.{Monomial, convert_to_monomials}
 import internal/invert_sign.{invert_sign}
 import internal/parse_argument.{parse_argument}
 import internal/tokenize.{tokenize}
@@ -122,11 +123,71 @@ pub fn invert_sign2_test() {
 }
 
 pub fn invert_sign3_test() {
-  invert_sign(["-9.33*X*", "4*X", "X^2", "=", "X^2", "2*X^1"])
+  invert_sign(["-9.33*X", "4*X", "X^2", "=", "X^2", "2*X^1"])
   |> should.equal(Ok(["-9.33*X", "4*X", "X^2", "-X^2", "-2*X^1"]))
 }
 
 pub fn invert_sign4_test() {
-  invert_sign(["-9.33*X*", "4*X", "X^2", "=", "X^2", "-2*X^1"])
+  invert_sign(["-9.33*X", "4*X", "X^2", "=", "X^2", "-2*X^1"])
   |> should.equal(Ok(["-9.33*X", "4*X", "X^2", "-X^2", "2*X^1"]))
+}
+
+pub fn reduce_equation1_test() {
+  convert_to_monomials(["-9.33*X", "4*X", "X^2", "-X^2", "2*X^1"])
+  |> should.be_ok
+  |> should.equal([
+    Monomial(-9.33, 1),
+    Monomial(4.0, 1),
+    Monomial(1.0, 2),
+    Monomial(-1.0, 2),
+    Monomial(2.0, 1),
+  ])
+}
+
+pub fn reduce_equation2_test() {
+  convert_to_monomials(["-9.33", "2*X^1", "3.2*X^2"])
+  |> should.be_ok
+  |> should.equal([Monomial(-9.33, 0), Monomial(2.0, 1), Monomial(3.2, 2)])
+}
+
+pub fn reduce_equation3_test() {
+  convert_to_monomials(["2*X^1"])
+  |> should.be_ok
+  |> should.equal([Monomial(2.0, 1)])
+}
+
+pub fn reduce_equation4_test() {
+  convert_to_monomials(["3*X", "-2.3*X^2", "-9.2", "1.9*X^2", "-X"])
+  |> should.be_ok
+  |> should.equal([
+    Monomial(3.0, 1),
+    Monomial(-2.3, 2),
+    Monomial(-9.2, 0),
+    Monomial(1.9, 2),
+    Monomial(-1.0, 1),
+  ])
+}
+
+pub fn reduce_equation5_test() {
+  convert_to_monomials(["3*X", "-2.3*X^2", "-9.2", "1.9*X^2", "X"])
+  |> should.be_ok
+  |> should.equal([
+    Monomial(3.0, 1),
+    Monomial(-2.3, 2),
+    Monomial(-9.2, 0),
+    Monomial(1.9, 2),
+    Monomial(1.0, 1),
+  ])
+}
+
+pub fn reduce_equation6_test() {
+  convert_to_monomials(["3*X", "-2.3*X^2", "9", "1.9*X^2", "X"])
+  |> should.be_ok
+  |> should.equal([
+    Monomial(3.0, 1),
+    Monomial(-2.3, 2),
+    Monomial(9.0, 0),
+    Monomial(1.9, 2),
+    Monomial(1.0, 1),
+  ])
 }
