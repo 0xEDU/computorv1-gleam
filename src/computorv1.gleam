@@ -1,6 +1,7 @@
 import argv
 import gleam/io
 import gleam/result
+import internal/convert_to_monomials.{convert_to_monomials}
 import internal/invert_sign.{invert_sign}
 import internal/parse_argument.{parse_argument}
 import internal/tokenize.{tokenize}
@@ -14,6 +15,7 @@ pub fn main() {
     |> result.then(tokenize)
     |> result.then(validate_tokens)
     |> result.then(invert_sign)
+    |> result.then(convert_to_monomials)
   case argument {
     Ok(a) -> a
     Error(b) -> {
