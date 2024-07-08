@@ -1,10 +1,7 @@
 import gleam/float
 import gleam/int
-import gleam/io
 import gleam/list
 import gleam/string
-
-const world_assertion = "something went really wrong"
 
 pub type MonomialType {
   Monomial(coefficient: Float, degree: Int)
