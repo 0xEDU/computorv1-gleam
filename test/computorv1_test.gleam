@@ -3,6 +3,7 @@ import gleeunit/should
 import internal/convert_to_monomials.{Monomial, convert_to_monomials}
 import internal/invert_sign.{invert_sign}
 import internal/parse_argument.{parse_argument}
+import internal/reduce_equation.{reduce_equation}
 import internal/tokenize.{tokenize}
 import internal/utils
 import internal/validate_argument.{validate_argument}
@@ -190,4 +191,39 @@ pub fn convert_to_monomials6_test() {
     Monomial(1.9, 2),
     Monomial(1.0, 1),
   ])
+}
+
+pub fn reduce_equation1_test() {
+  reduce_equation([
+    Monomial(3.0, 1),
+    Monomial(-2.3, 3),
+    Monomial(9.0, 0),
+    Monomial(1.9, 2),
+    Monomial(1.0, 1),
+  ])
+  |> should.equal(
+    Ok([
+      Monomial(9.0, 0),
+      Monomial(4.0, 1),
+      Monomial(1.9, 2),
+      Monomial(-2.3, 3)]),
+  )
+}
+
+pub fn reduce_equation2_test() {
+  reduce_equation([
+    Monomial(3.0, -1),
+    Monomial(-2.3, 3),
+    Monomial(9.0, 0),
+    Monomial(1.9, 2),
+    Monomial(1.0, 1),
+  ])
+  |> should.equal(
+    Ok([
+      Monomial(3.0, -1),
+      Monomial(9.0, 0),
+      Monomial(1.0, 1),
+      Monomial(1.9, 2),
+      Monomial(-2.3, 3)]),
+  )
 }
