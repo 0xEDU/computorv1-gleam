@@ -7,8 +7,8 @@ import internal/reduce_equation.{reduce_equation}
 import internal/tokenize.{tokenize}
 import internal/utils
 import internal/validate_argument.{validate_argument}
-import internal/validate_tokens.{validate_tokens}
 import internal/validate_equation.{validate_equation}
+import internal/validate_tokens.{validate_tokens}
 
 pub fn main() {
   gleeunit.main()
@@ -237,10 +237,6 @@ pub fn validate_equation1_test() {
 }
 
 pub fn validate_equation2_test() {
-  validate_equation([
-    Monomial(9.0, 0),
-    Monomial(4.0, 1),
-    Monomial(1.9, 2),
-  ])
+  validate_equation([Monomial(9.0, 0), Monomial(4.0, 1), Monomial(1.9, 2)])
   |> should.be_ok
 }
