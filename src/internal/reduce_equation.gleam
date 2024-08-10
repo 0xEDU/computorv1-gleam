@@ -1,5 +1,4 @@
 import internal/convert_to_monomials.{type MonomialType, Monomial}
-import gleam/io
 import gleam/result
 import gleam/list
 import gleam/dict
