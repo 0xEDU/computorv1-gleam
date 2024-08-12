@@ -63,6 +63,7 @@ pub fn print_equation_details(
   {
     "Polynomial degree: "
     <> equation
+    |> list.filter(fn(m) { m.coefficient |> float.compare(0.0) != order.Eq })
     |> list.last
     |> result.map(fn(x) { x.degree |> int.to_string })
     |> result.unwrap("")
