@@ -1,5 +1,7 @@
 import gleam/dict
+import gleam/float
 import gleam/list
+import gleam/order
 import gleam/result
 import internal/convert_to_monomials.{type MonomialType, Monomial}
 
@@ -19,5 +21,6 @@ pub fn reduce_equation(
   |> dict.to_list
   |> list.map(fn(tuple) { tuple.1 })
   |> list.map(fn(result) { result.unwrap(result, Monomial(0.0, 0)) })
+  |> list.filter(fn(m) { m.coefficient |> float.compare(0.0) != order.Eq })
   |> Ok
 }
