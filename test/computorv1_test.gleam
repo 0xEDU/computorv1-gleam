@@ -69,6 +69,12 @@ pub fn tokenize2_test() {
   |> should.equal(["5", "4*X", "X^2", "=", "X^2"])
 }
 
+pub fn tokenize3_test() {
+  tokenize("-5-4*X+X^2=X^2-4")
+  |> should.be_ok
+  |> should.equal(["-5", "-4*X", "X^2", "=", "X^2", "-4"])
+}
+
 pub fn validate_tokens1_test() {
   validate_tokens(["5", "4*X", "X^2", "=", "X^2"])
   |> should.be_ok

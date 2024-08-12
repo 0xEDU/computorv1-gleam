@@ -8,6 +8,10 @@ pub fn tokenize(expression: String) -> Result(List(String), String) {
     [_, _, ..] if len > 2 -> Error("InvalidExpressionError")
     [first, second, ..] -> {
       let first = string.replace(first, "-", "+-") |> string.split("+")
+      let first = case first {
+        ["", ..] -> first |> list.drop(1)
+        _ -> first
+      }
       let second = string.replace(second, "-", "+-") |> string.split("+")
       [first, ["="], second] |> list.flatten |> Ok
     }
