@@ -13,6 +13,10 @@ pub fn tokenize(expression: String) -> Result(List(String), String) {
         _ -> first
       }
       let second = string.replace(second, "-", "+-") |> string.split("+")
+      let second = case second {
+        ["", ..] -> second |> list.drop(1)
+        _ -> second
+      }
       [first, ["="], second] |> list.flatten |> Ok
     }
     _ -> Error("InvalidExpressionError")

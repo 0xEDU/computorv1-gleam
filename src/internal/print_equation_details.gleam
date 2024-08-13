@@ -31,7 +31,7 @@ fn monomial_to_string(monomial: MonomialType) -> String {
   let abs_coeff_str =
     " " <> coeff |> float.absolute_value |> float.to_string |> trim_zero
   let monomial_str = case degree {
-    0 -> abs_coeff_str
+    0 -> value_sign(coeff) <> abs_coeff_str
     1 -> value_sign(coeff) <> abs_coeff_str <> " * X"
     _ -> value_sign(coeff) <> abs_coeff_str <> " * X^" <> int.to_string(degree)
   }
@@ -54,6 +54,7 @@ pub fn print_equation_details(
     |> fn(equation_str) {
       case equation_str {
         "+" <> rest -> rest
+        "- " <> rest -> "-" <> rest
         _ -> equation_str
       }
     }

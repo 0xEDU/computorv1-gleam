@@ -10,6 +10,7 @@ import internal/print_equation_details.{print_equation_details}
 import internal/validate_argument.{validate_argument}
 import internal/validate_equation.{validate_equation}
 import internal/validate_tokens.{validate_tokens}
+import internal/solve_equation.{solve_equation}
 
 pub fn main() {
   let argument =
@@ -22,6 +23,7 @@ pub fn main() {
     |> result.then(reduce_equation)
     |> result.then(print_equation_details)
     |> result.then(validate_equation)
+    |> result.then(solve_equation)
   case argument {
     Ok(a) -> a
     Error(b) -> {
