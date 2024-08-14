@@ -4,13 +4,13 @@ import gleam/result
 import internal/convert_to_monomials.{convert_to_monomials}
 import internal/invert_sign.{invert_sign}
 import internal/parse_argument.{parse_argument}
-import internal/reduce_equation.{reduce_equation}
-import internal/tokenize.{tokenize}
 import internal/print_equation_details.{print_equation_details}
+import internal/reduce_equation.{reduce_equation}
+import internal/solve_equation.{solve_equation}
+import internal/tokenize.{tokenize}
 import internal/validate_argument.{validate_argument}
 import internal/validate_equation.{validate_equation}
 import internal/validate_tokens.{validate_tokens}
-import internal/solve_equation.{solve_equation}
 
 pub fn main() {
   let argument =
@@ -28,7 +28,6 @@ pub fn main() {
     Ok(a) -> a
     Error(b) -> {
       io.println(b)
-      []
     }
   }
 }

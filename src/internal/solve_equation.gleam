@@ -14,9 +14,20 @@ fn compute_delta(a: Float, b: Float, c: Float) {
   }
 }
 
-pub fn solve_equation(
-  equation: List(MonomialType),
-) -> Result(List(MonomialType), String) {
+pub fn solve_equation(equation: List(MonomialType)) -> Result(Nil, String) {
+  let negate_and_print = fn(f: Float) {
+    f |> float.negate |> float.to_string |> io.println
+  }
+  let get_position = fn(
+    l: List(MonomialType),
+    position: fn(List(MonomialType)) -> Result(MonomialType, Nil),
+  ) {
+    l
+    |> position
+    |> result.map(fn(m) { m.coefficient })
+    |> result.unwrap(0.0)
+  }
+
   let degree =
     equation
     |> list.filter(fn(m) { m.coefficient |> float.compare(0.0) != order.Eq })
@@ -27,15 +38,6 @@ pub fn solve_equation(
     degree if degree > 2 ->
       Error("The polynomial degree is strictly greater than 2, I can't solve.")
     2 -> {
-      let get_position = fn(
-        l: List(MonomialType),
-        position: fn(List(MonomialType)) -> Result(MonomialType, Nil),
-      ) {
-        l
-        |> position
-        |> result.map(fn(m) { m.coefficient })
-        |> result.unwrap(0.0)
-      }
       let c = equation |> get_position(list.first)
       let b = equation |> list.drop(1) |> get_position(list.first)
       let a = equation |> get_position(list.last)
@@ -48,11 +50,7 @@ pub fn solve_equation(
             case delta {
               _ if is_zero -> {
                 io.println("Discrimant is 0. Only one answer is possible:")
-                { b /. { 2.0 *. a } }
-                |> float.negate
-                |> float.to_string
-                |> io.println
-                equation
+                { b /. { 2.0 *. a } } |> negate_and_print
               }
               _ -> {
                 let sqrt = fn(f) {
@@ -61,21 +59,20 @@ pub fn solve_equation(
                 io.println(
                   "Discriminant is strictly positive, the two solutions are:",
                 )
-                { { b +. sqrt(delta) } /. { 2.0 *. a } }
-                |> float.negate
-                |> float.to_string
-                |> io.println
-                { { b -. sqrt(delta) } /. { 2.0 *. a } }
-                |> float.negate
-                |> float.to_string
-                |> io.println
-                equation
+                let a = 2.0 *. a
+                { { b +. sqrt(delta) } /. a } |> negate_and_print
+                { { b -. sqrt(delta) } /. a } |> negate_and_print
               }
             }
           })
       }
     }
-    1 -> Ok(equation)
+    1 -> {
+      let a = equation |> get_position(list.last)
+      let b = equation |> get_position(list.first)
+      io.println("The only solution possible is:")
+      Ok({ b /. a } |> negate_and_print)
+    }
     _ ->
       Error(
         "The polynomial degree is strictly less than or equal 0, I can't solve it yet.",
