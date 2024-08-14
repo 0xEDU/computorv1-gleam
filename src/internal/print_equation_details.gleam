@@ -5,7 +5,7 @@ import gleam/list
 import gleam/order
 import gleam/result
 import gleam/string
-import internal/convert_to_monomials.{type MonomialType, Monomial}
+import internal/convert_to_monomials.{type MonomialType}
 
 fn trim_zero(coeff_str: String) -> String {
   string.reverse(coeff_str)
@@ -47,6 +47,7 @@ pub fn print_equation_details(
   {
     "Reduced form: "
     <> equation
+    |> list.reverse
     |> list.map(monomial_to_string)
     |> list.filter(fn(s) { !string.is_empty(s) })
     |> string.join(" ")

@@ -1,7 +1,5 @@
 import gleam/dict
-import gleam/float
 import gleam/list
-import gleam/order
 import gleam/result
 import internal/convert_to_monomials.{type MonomialType, Monomial}
 
