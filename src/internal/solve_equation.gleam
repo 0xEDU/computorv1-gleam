@@ -46,8 +46,11 @@ pub fn solve_equation(equation: List(MonomialType)) -> Result(Nil, String) {
     2 -> {
       let c = equation |> get_position(list.first)
       let b = equation |> list.drop(1) |> get_position(list.first)
-      let a = { equation |> get_position(list.last) }
+      let a = {
+        equation |> get_position(list.last)
+      }
       let delta = compute_delta(a, b, c)
+      io.println("Delta: " <> delta |> float.to_string)
       let is_delta_zero = is_zero(delta)
       let is_delta_lt_zero = float.compare(delta, 0.0) == order.Lt
       let is_a_zero = is_zero(a)
@@ -70,18 +73,10 @@ pub fn solve_equation(equation: List(MonomialType)) -> Result(Nil, String) {
           )
           let a = 2.0 *. a
           let sqrt = delta |> float.negate |> sqrt
-          {
-            let real = { b  /. a } |> float.negate |> float.to_string
-            let imaginary = { sqrt /. a } |> float.to_string
-            real <> " + " <> imaginary <> " * i"
-          }
-          |> io.println
-          {
-            let real = { b  /. a } |> float.negate |> float.to_string
-            let imaginary = { sqrt /. a } |> float.to_string
-            real <> " - " <> imaginary <> " * i"
-          }
-          |> io.println
+          let real = { b /. a } |> float.negate |> float.to_string
+          let imaginary = { sqrt /. a } |> float.to_string
+          { real <> " + " <> imaginary <> " * i" } |> io.println
+          { real <> " - " <> imaginary <> " * i" } |> io.println
         }
         _ -> {
           io.println(
