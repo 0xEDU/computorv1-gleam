@@ -46,7 +46,7 @@ pub fn solve_equation(equation: List(MonomialType)) -> Result(Nil, String) {
     2 -> {
       let c = equation |> get_position(list.first)
       let b = equation |> list.drop(1) |> get_position(list.first)
-      let a = equation |> get_position(list.last)
+      let a = { equation |> get_position(list.last) }
       let delta = compute_delta(a, b, c)
       let is_delta_zero = is_zero(delta)
       let is_delta_lt_zero = float.compare(delta, 0.0) == order.Lt
@@ -62,19 +62,24 @@ pub fn solve_equation(equation: List(MonomialType)) -> Result(Nil, String) {
         }
         _ if is_delta_zero -> {
           io.println("Discrimant is 0. Only one answer is possible:")
-          { b /. { 2.0 *. a } } |> negate_and_print
+          { b /. { a *. 2.0 } } |> negate_and_print
         }
         _ if is_delta_lt_zero -> {
           io.println(
             "Discriminant is strictly negative, the two complex solutions are:",
           )
+          let a = 2.0 *. a
           let sqrt = delta |> float.negate |> sqrt
           {
-            { { b +. sqrt } /. a } |> float.negate |> float.to_string <> " * i"
+            let real = { b  /. a } |> float.negate |> float.to_string
+            let imaginary = { sqrt /. a } |> float.to_string
+            real <> " + " <> imaginary <> " * i"
           }
           |> io.println
           {
-            { { b -. sqrt } /. a } |> float.negate |> float.to_string <> " * i"
+            let real = { b  /. a } |> float.negate |> float.to_string
+            let imaginary = { sqrt /. a } |> float.to_string
+            real <> " - " <> imaginary <> " * i"
           }
           |> io.println
         }
