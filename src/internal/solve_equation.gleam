@@ -15,9 +15,8 @@ fn compute_delta(a: Float, b: Float, c: Float) {
 }
 
 pub fn solve_equation(equation: List(MonomialType)) -> Result(Nil, String) {
-  let negate_and_print = fn(f: Float) {
-    f |> float.negate |> float.to_string |> io.println
-  }
+  let print_float = fn(f: Float) { f |> float.to_string |> io.println }
+  let negate_and_print = fn(f: Float) { f |> float.negate |> print_float }
   let get_position = fn(
     l: List(MonomialType),
     position: fn(List(MonomialType)) -> Result(MonomialType, Nil),
@@ -27,13 +26,22 @@ pub fn solve_equation(equation: List(MonomialType)) -> Result(Nil, String) {
     |> result.map(fn(m) { m.coefficient })
     |> result.unwrap(0.0)
   }
+  let is_zero = fn(f: Float) { float.compare(f, 0.0) == order.Eq }
 
   let degree =
     equation
     |> list.filter(fn(m) { m.coefficient |> float.compare(0.0) != order.Eq })
-    |> list.last
-    |> result.map(fn(m) { m.degree })
-    |> result.unwrap(-42)
+    |> fn(l: List(MonomialType)) {
+      case l {
+        [] -> 0
+        _ -> {
+          l
+          |> list.last
+          |> result.map(fn(m) { m.degree })
+          |> result.unwrap(-42)
+        }
+      }
+    }
   case degree {
     degree if degree > 2 ->
       Error("The polynomial degree is strictly greater than 2, I can't solve.")
@@ -46,9 +54,18 @@ pub fn solve_equation(equation: List(MonomialType)) -> Result(Nil, String) {
         Error(err) -> Error(err)
         Ok(delta) ->
           Ok({
-            let is_zero = float.compare(delta, 0.0) == order.Eq
+            let is_delta_zero = is_zero(delta)
+            let is_a_zero = is_zero(a)
+            let is_b_zero = is_zero(b)
+            let is_c_zero = is_zero(c)
             case delta {
-              _ if is_zero -> {
+              _ if is_a_zero && is_b_zero && is_c_zero ->
+                io.println("Any value can solve this equation.")
+              _ if is_a_zero && is_b_zero -> {
+                io.println("The equation is a constant:")
+                { c } |> negate_and_print
+              }
+              _ if is_delta_zero -> {
                 io.println("Discrimant is 0. Only one answer is possible:")
                 { b /. { 2.0 *. a } } |> negate_and_print
               }
@@ -70,9 +87,33 @@ pub fn solve_equation(equation: List(MonomialType)) -> Result(Nil, String) {
     1 -> {
       let a = equation |> get_position(list.last)
       let b = equation |> get_position(list.first)
-      io.println("The only solution possible is:")
-      Ok({ b /. a } |> negate_and_print)
+      let is_a_zero = is_zero(a)
+      let is_b_zero = is_zero(b)
+      case a {
+        _ if is_a_zero && is_b_zero ->
+          Ok(io.println("Any value can solve this equation."))
+        _ if is_a_zero -> {
+          io.println("The equation is a constant:")
+          Ok(b |> print_float)
+        }
+        _ -> {
+          io.println("The only solution possible is:")
+          Ok({ b /. a } |> negate_and_print)
+        }
+      }
     }
+    0 ->
+      Ok({
+        let c = equation |> get_position(list.first)
+        let is_c_zero = is_zero(c)
+        case c {
+          _ if is_c_zero -> io.println("Any value can solve this equation.")
+          _ -> {
+            io.println("The equation is a constant:")
+            c |> print_float
+          }
+        }
+      })
     _ ->
       Error(
         "The polynomial degree is strictly less than or equal 0, I can't solve it yet.",

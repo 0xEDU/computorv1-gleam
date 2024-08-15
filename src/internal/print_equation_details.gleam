@@ -50,6 +50,12 @@ pub fn print_equation_details(
     |> list.reverse
     |> list.map(monomial_to_string)
     |> list.filter(fn(s) { !string.is_empty(s) })
+    |> fn(l: List(String)) {
+      case l {
+        [] -> ["0"]
+        _ -> l
+      }
+    }
     |> string.join(" ")
     |> string.trim_left
     |> fn(equation_str) {
@@ -66,9 +72,17 @@ pub fn print_equation_details(
     "Polynomial degree: "
     <> equation
     |> list.filter(fn(m) { m.coefficient |> float.compare(0.0) != order.Eq })
-    |> list.last
-    |> result.map(fn(x) { x.degree |> int.to_string })
-    |> result.unwrap("")
+    |> fn(l: List(MonomialType)) {
+      case l {
+        [] -> "0"
+        _ -> {
+          l
+          |> list.last
+          |> result.map(fn(x) { x.degree |> int.to_string })
+          |> result.unwrap("")
+        }
+      }
+    }
   }
   |> io.println
   Ok(equation)
