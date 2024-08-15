@@ -75,8 +75,16 @@ pub fn solve_equation(equation: List(MonomialType)) -> Result(Nil, String) {
           let sqrt = delta |> float.negate |> sqrt
           let real = { b /. a } |> float.negate |> float.to_string
           let imaginary = { sqrt /. a } |> float.to_string
-          { real <> " + " <> imaginary <> " * i" } |> io.println
-          { real <> " - " <> imaginary <> " * i" } |> io.println
+          case real {
+            "0.0" | "-0.0" -> {
+              { imaginary <> " * i" } |> io.println
+              { "-" <> imaginary <> " * i" } |> io.println
+            }
+            _ -> {
+              { real <> " + " <> imaginary <> " * i" } |> io.println
+              { real <> " - " <> imaginary <> " * i" } |> io.println
+            }
+          }
         }
         _ -> {
           io.println(
@@ -89,7 +97,9 @@ pub fn solve_equation(equation: List(MonomialType)) -> Result(Nil, String) {
       }
     }
     1 -> {
-      let equation = equation |> list.filter(fn(m) { m.coefficient |> float.compare(0.0) != order.Eq})
+      let equation =
+        equation
+        |> list.filter(fn(m) { m.coefficient |> float.compare(0.0) != order.Eq })
       let a = equation |> get_position(list.last)
       let b = equation |> get_position(list.first)
       let is_a_zero = is_zero(a)
