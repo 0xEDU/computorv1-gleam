@@ -14,7 +14,8 @@ import internal/validate_tokens.{validate_tokens}
 
 pub fn main() {
   let argument =
-    validate_argument(argv.load().arguments)
+    argv.load().arguments
+    |> validate_argument
     |> result.then(parse_argument)
     |> result.then(tokenize)
     |> result.then(validate_tokens)

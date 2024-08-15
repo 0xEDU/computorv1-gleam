@@ -4,7 +4,8 @@ import gleam/result
 pub fn invert_sign(tokens: List(String)) -> Result(List(String), String) {
   let #(before, after) = list.split_while(tokens, fn(token) { token != "=" })
   let new_after =
-    list.rest(after)
+    after
+    |> list.rest
     |> result.unwrap([""])
     |> list.map(fn(token) {
       case token {

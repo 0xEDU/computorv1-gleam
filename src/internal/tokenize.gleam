@@ -5,20 +5,23 @@ pub fn tokenize(expression: String) -> Result(List(String), String) {
   let split_equal = string.split(expression, "=")
   let len = list.length(split_equal)
   case split_equal {
-    [_, _, ..] if len > 2 -> Error("InvalidExpressionError")
+    [_, _, ..] if len > 2 -> Error("Invalid expression!")
     [first, second, ..] -> {
-      let first = string.replace(first, "-", "+-") |> string.split("+")
-      let first = case first {
-        ["", ..] -> first |> list.drop(1)
-        _ -> first
+      let splitter = fn(str) {
+        str
+        |> string.replace("-", "+-")
+        |> string.split("+")
+        |> fn(str) {
+          case str {
+            ["", ..] -> str |> list.drop(1)
+            _ -> str
+          }
+        }
       }
-      let second = string.replace(second, "-", "+-") |> string.split("+")
-      let second = case second {
-        ["", ..] -> second |> list.drop(1)
-        _ -> second
-      }
+      let first = first |> splitter
+      let second = second |> splitter
       [first, ["="], second] |> list.flatten |> Ok
     }
-    _ -> Error("InvalidExpressionError")
+    _ -> Error("Invalid expression!!")
   }
 }

@@ -12,7 +12,7 @@ fn is_num(c: String) -> Bool {
 
 fn is_valid_char(c: String) -> Bool {
   case c {
-    "X" | "*" | "/" | "+" | "-" | "." | "^" | "=" -> True
+    "X" | "*" | "+" | "-" | "." | "^" | "=" -> True
     _ -> is_num(c)
   }
 }
@@ -24,9 +24,9 @@ fn has_invalid_chars(argument: String) -> Result(Nil, String) {
   }
   let len = string.length(argument)
   case valid {
-    True if len != 0 -> has_invalid_chars(string.drop_left(argument, 1))
+    True if len != 0 -> argument |> string.drop_left(1) |> has_invalid_chars
     True -> Ok(Nil)
-    False -> Error("InvalidCharError")
+    False -> Error("Invalid character detected!!")
   }
 }
 

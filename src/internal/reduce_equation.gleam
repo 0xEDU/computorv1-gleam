@@ -9,7 +9,8 @@ pub fn reduce_equation(
   equation
   |> list.group(fn(monomial) { monomial.degree })
   |> dict.map_values(fn(_, v) {
-    list.reduce(v, fn(acc, monomial) {
+    v
+    |> list.reduce(fn(acc, monomial) {
       Monomial(
         coefficient: acc.coefficient +. monomial.coefficient,
         degree: acc.degree,
