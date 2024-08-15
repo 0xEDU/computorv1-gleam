@@ -6,12 +6,7 @@ import gleam/result
 import internal/convert_to_monomials.{type MonomialType}
 
 fn compute_delta(a: Float, b: Float, c: Float) {
-  let delta = { b *. b } -. { 4.0 *. a *. c }
-  let is_not_negative = float.compare(delta, 0.0) != order.Lt
-  case is_not_negative {
-    True -> Ok(delta)
-    False -> Error("Discriminant is negative, can't compute complex roots!")
-  }
+  { b *. b } -. { 4.0 *. a *. c }
 }
 
 pub fn solve_equation(equation: List(MonomialType)) -> Result(Nil, String) {
@@ -27,6 +22,7 @@ pub fn solve_equation(equation: List(MonomialType)) -> Result(Nil, String) {
     |> result.unwrap(0.0)
   }
   let is_zero = fn(f: Float) { float.compare(f, 0.0) == order.Eq }
+  let sqrt = fn(f) { f |> float.square_root |> result.unwrap(-42.0) }
 
   let degree =
     equation
@@ -44,44 +40,54 @@ pub fn solve_equation(equation: List(MonomialType)) -> Result(Nil, String) {
     }
   case degree {
     degree if degree > 2 ->
-      Error("The polynomial degree is strictly greater than 2, I can't solve.")
+      io.println(
+        "The polynomial degree is strictly greater than 2, I can't solve.",
+      )
     2 -> {
       let c = equation |> get_position(list.first)
       let b = equation |> list.drop(1) |> get_position(list.first)
       let a = equation |> get_position(list.last)
       let delta = compute_delta(a, b, c)
+      let is_delta_zero = is_zero(delta)
+      let is_delta_lt_zero = float.compare(delta, 0.0) == order.Lt
+      let is_a_zero = is_zero(a)
+      let is_b_zero = is_zero(b)
+      let is_c_zero = is_zero(c)
       case delta {
-        Error(err) -> Error(err)
-        Ok(delta) ->
-          Ok({
-            let is_delta_zero = is_zero(delta)
-            let is_a_zero = is_zero(a)
-            let is_b_zero = is_zero(b)
-            let is_c_zero = is_zero(c)
-            case delta {
-              _ if is_a_zero && is_b_zero && is_c_zero ->
-                io.println("Any value can solve this equation.")
-              _ if is_a_zero && is_b_zero -> {
-                io.println("The equation is a constant:")
-                { c } |> negate_and_print
-              }
-              _ if is_delta_zero -> {
-                io.println("Discrimant is 0. Only one answer is possible:")
-                { b /. { 2.0 *. a } } |> negate_and_print
-              }
-              _ -> {
-                let sqrt = fn(f) {
-                  f |> float.square_root |> result.unwrap(-42.0)
-                }
-                io.println(
-                  "Discriminant is strictly positive, the two solutions are:",
-                )
-                let a = 2.0 *. a
-                { { b +. sqrt(delta) } /. a } |> negate_and_print
-                { { b -. sqrt(delta) } /. a } |> negate_and_print
-              }
-            }
-          })
+        _ if is_a_zero && is_b_zero && is_c_zero ->
+          io.println("Any value can solve this equation.")
+        _ if is_a_zero && is_b_zero -> {
+          io.println("The equation is a constant:")
+          c |> print_float
+        }
+        _ if is_delta_zero -> {
+          io.println("Discrimant is 0. Only one answer is possible:")
+          { b /. { 2.0 *. a } } |> negate_and_print
+        }
+        _ if is_delta_lt_zero -> {
+          io.println(
+            "Discriminant is strictly negative, the two complex solutions are:",
+          )
+          let sqrt = delta |> float.negate |> sqrt
+          {
+            { { b +. sqrt } /. a } |> float.negate |> float.to_string
+            <> " * i"
+          }
+          |> io.println
+          {
+            { { b -. sqrt } /. a } |> float.negate |> float.to_string
+            <> " * i"
+          }
+          |> io.println
+        }
+        _ -> {
+          io.println(
+            "Discriminant is strictly positive, the two solutions are:",
+          )
+          let a = 2.0 *. a
+          { { b +. sqrt(delta) } /. a } |> negate_and_print
+          { { b -. sqrt(delta) } /. a } |> negate_and_print
+        }
       }
     }
     1 -> {
@@ -91,32 +97,32 @@ pub fn solve_equation(equation: List(MonomialType)) -> Result(Nil, String) {
       let is_b_zero = is_zero(b)
       case a {
         _ if is_a_zero && is_b_zero ->
-          Ok(io.println("Any value can solve this equation."))
+          io.println("Any value can solve this equation.")
         _ if is_a_zero -> {
           io.println("The equation is a constant:")
-          Ok(b |> print_float)
+          b |> print_float
         }
         _ -> {
           io.println("The only solution possible is:")
-          Ok({ b /. a } |> negate_and_print)
+          { b /. a } |> negate_and_print
         }
       }
     }
-    0 ->
-      Ok({
-        let c = equation |> get_position(list.first)
-        let is_c_zero = is_zero(c)
-        case c {
-          _ if is_c_zero -> io.println("Any value can solve this equation.")
-          _ -> {
-            io.println("The equation is a constant:")
-            c |> print_float
-          }
+    0 -> {
+      let c = equation |> get_position(list.first)
+      let is_c_zero = is_zero(c)
+      case c {
+        _ if is_c_zero -> io.println("Any value can solve this equation.")
+        _ -> {
+          io.println("The equation is a constant:")
+          c |> print_float
         }
-      })
+      }
+    }
     _ ->
-      Error(
-        "The polynomial degree is strictly less than or equal 0, I can't solve it yet.",
+      io.println(
+        "The polynomial degree is strictly less than 0, I can't solve it.",
       )
   }
+  |> Ok
 }
