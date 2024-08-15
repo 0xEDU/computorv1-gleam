@@ -60,7 +60,7 @@ pub fn solve_equation(equation: List(MonomialType)) -> Result(Nil, String) {
         _ if is_a_zero && is_b_zero && is_c_zero ->
           io.println("Any value can solve this equation.")
         _ if is_a_zero && is_b_zero -> {
-          io.println("The equation is a constant:")
+          io.println("Impossible! The equation results in a constant:")
           c |> print_float
         }
         _ if is_delta_zero -> {
@@ -108,7 +108,7 @@ pub fn solve_equation(equation: List(MonomialType)) -> Result(Nil, String) {
         _ if is_a_zero && is_b_zero ->
           io.println("Any value can solve this equation.")
         _ if is_a_zero -> {
-          io.println("The equation is a constant:")
+          io.println("Impossible! The equation results in a constant:")
           b |> print_float
         }
         _ -> {
@@ -123,7 +123,7 @@ pub fn solve_equation(equation: List(MonomialType)) -> Result(Nil, String) {
       case c {
         _ if is_c_zero -> io.println("Any value can solve this equation.")
         _ -> {
-          io.println("The equation is a constant:")
+          io.println("Impossible! The equation results in a constant:")
           c |> print_float
         }
       }
