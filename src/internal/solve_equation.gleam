@@ -89,6 +89,7 @@ pub fn solve_equation(equation: List(MonomialType)) -> Result(Nil, String) {
       }
     }
     1 -> {
+      let equation = equation |> list.filter(fn(m) { m.coefficient |> float.compare(0.0) != order.Eq})
       let a = equation |> get_position(list.last)
       let b = equation |> get_position(list.first)
       let is_a_zero = is_zero(a)
