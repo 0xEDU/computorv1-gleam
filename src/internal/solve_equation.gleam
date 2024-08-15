@@ -70,13 +70,11 @@ pub fn solve_equation(equation: List(MonomialType)) -> Result(Nil, String) {
           )
           let sqrt = delta |> float.negate |> sqrt
           {
-            { { b +. sqrt } /. a } |> float.negate |> float.to_string
-            <> " * i"
+            { { b +. sqrt } /. a } |> float.negate |> float.to_string <> " * i"
           }
           |> io.println
           {
-            { { b -. sqrt } /. a } |> float.negate |> float.to_string
-            <> " * i"
+            { { b -. sqrt } /. a } |> float.negate |> float.to_string <> " * i"
           }
           |> io.println
         }
