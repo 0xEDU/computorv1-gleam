@@ -49,9 +49,31 @@ fn has_one_symbol(token: String) -> Result(String, String) {
   }
 }
 
+fn has_multpl_before_x(token: String) -> Result(String, String) {
+  let has_x = token |> string.contains("X")
+  case has_x {
+    False -> Ok(token)
+    True -> {
+      let split_string = string.split(token, "X")
+      case split_string {
+        [_, ""] | ["", _] | ["-", _] -> Ok(token)
+        [start, _] -> {
+          let before_x = start |> string.reverse |> string.to_graphemes |> list.first
+          case before_x {
+            Ok("*") -> Ok(token)
+            _ -> Error("Invalid token")
+          }
+        }
+        _ -> Error("Invalid token")
+      }
+    }
+  }
+}
+
 pub fn validate_tokens(tokens: List(String)) -> Result(List(String), String) {
   Ok(tokens)
   |> result.try(fn(tokens) { list.try_map(tokens, is_empty_token) })
   |> result.try(fn(tokens) { list.try_map(tokens, has_number) })
   |> result.try(fn(tokens) { list.try_map(tokens, has_one_symbol) })
+  |> result.try(fn(tokens) { list.try_map(tokens, has_multpl_before_x) })
 }

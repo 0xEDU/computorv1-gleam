@@ -120,6 +120,11 @@ pub fn validate_tokens9_test() {
   |> should.be_error
 }
 
+pub fn validate_tokens10_test() {
+  validate_tokens(["-9.33*X*", "4*X", "2X^2", "=", "X^2"])
+  |> should.be_error
+}
+
 pub fn invert_sign1_test() {
   invert_sign(["-9.33*X", "4*X", "X^2", "=", "X^2"])
   |> should.equal(Ok(["-9.33*X", "4*X", "X^2", "-X^2"]))
