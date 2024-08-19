@@ -58,7 +58,8 @@ fn has_multpl_before_x(token: String) -> Result(String, String) {
       case split_string {
         [_, ""] | ["", _] | ["-", _] -> Ok(token)
         [start, _] -> {
-          let before_x = start |> string.reverse |> string.to_graphemes |> list.first
+          let before_x =
+            start |> string.reverse |> string.to_graphemes |> list.first
           case before_x {
             Ok("*") -> Ok(token)
             _ -> Error("Invalid token")
