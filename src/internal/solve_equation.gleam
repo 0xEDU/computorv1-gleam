@@ -46,9 +46,8 @@ pub fn solve_equation(equation: List(MonomialType)) -> Result(Nil, String) {
     2 -> {
       let c = equation |> get_position(list.first)
       let b = equation |> list.drop(1) |> get_position(list.first)
-      let a = {
-        equation |> get_position(list.last)
-      }
+      let a = equation |> get_position(list.last)
+
       let delta = compute_delta(a, b, c)
       io.println("Delta: " <> delta |> float.to_string)
       let is_delta_zero = is_zero(delta)
@@ -74,7 +73,7 @@ pub fn solve_equation(equation: List(MonomialType)) -> Result(Nil, String) {
           let a = 2.0 *. a
           let sqrt = delta |> float.negate |> sqrt
           let real = { b /. a } |> float.negate |> float.to_string
-          let imaginary = { sqrt /. a } |> float.to_string
+          let imaginary = { sqrt /. a } |> float.absolute_value |> float.to_string
           case real {
             "0.0" | "-0.0" -> {
               { imaginary <> " * i" } |> io.println
