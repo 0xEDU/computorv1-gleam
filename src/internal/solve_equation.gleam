@@ -73,7 +73,8 @@ pub fn solve_equation(equation: List(MonomialType)) -> Result(Nil, String) {
           let a = 2.0 *. a
           let sqrt = delta |> float.negate |> sqrt
           let real = { b /. a } |> float.negate |> float.to_string
-          let imaginary = { sqrt /. a } |> float.absolute_value |> float.to_string
+          let imaginary =
+            { sqrt /. a } |> float.absolute_value |> float.to_string
           case real {
             "0.0" | "-0.0" -> {
               { imaginary <> " * i" } |> io.println
