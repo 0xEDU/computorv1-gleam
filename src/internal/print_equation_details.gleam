@@ -47,7 +47,6 @@ pub fn print_equation_details(
   {
     "Reduced form: "
     <> equation
-    |> list.reverse
     |> list.map(monomial_to_string)
     |> list.filter(fn(s) { !string.is_empty(s) })
     |> fn(l: List(String)) {
@@ -60,7 +59,7 @@ pub fn print_equation_details(
     |> string.trim_left
     |> fn(equation_str) {
       case equation_str {
-        "+" <> rest -> rest
+        "+ " <> rest -> rest
         "- " <> rest -> "-" <> rest
         _ -> equation_str
       }
