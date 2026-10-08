@@ -5,8 +5,20 @@ import gleam/order
 import gleam/result
 import internal/convert_to_monomials.{type MonomialType}
 
+const discriminant_relative_tolerance = 0.00000000000001
+
 fn compute_delta(a: Float, b: Float, c: Float) {
   { b *. b } -. { 4.0 *. a *. c }
+}
+
+fn normalize_delta(delta: Float, a: Float, b: Float, c: Float) -> Float {
+  let scale =
+    float.absolute_value(b *. b) +. float.absolute_value(4.0 *. a *. c)
+  let tolerance = discriminant_relative_tolerance *. scale
+  case float.compare(float.absolute_value(delta), tolerance) {
+    order.Lt | order.Eq -> 0.0
+    order.Gt -> delta
+  }
 }
 
 pub fn solve_equation(equation: List(MonomialType)) -> Result(Nil, String) {
@@ -48,7 +60,7 @@ pub fn solve_equation(equation: List(MonomialType)) -> Result(Nil, String) {
       let b = equation |> list.drop(1) |> get_position(list.first)
       let a = equation |> get_position(list.last)
 
-      let delta = compute_delta(a, b, c)
+      let delta = compute_delta(a, b, c) |> normalize_delta(a, b, c)
       io.println("Delta: " <> delta |> float.to_string)
       let is_delta_zero = is_zero(delta)
       let is_delta_lt_zero = float.compare(delta, 0.0) == order.Lt
