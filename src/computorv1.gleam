@@ -12,10 +12,20 @@ import internal/validate_argument.{validate_argument}
 import internal/validate_equation.{validate_equation}
 import internal/validate_tokens.{validate_tokens}
 
+fn get_argument(arguments: List(String)) -> Result(String, String) {
+  case arguments {
+    [] -> read_stdin()
+    _ -> validate_argument(arguments)
+  }
+}
+
+@external(erlang, "computorv1_ffi", "read_stdin")
+fn read_stdin() -> Result(String, String)
+
 pub fn main() {
   let argument =
     argv.load().arguments
-    |> validate_argument
+    |> get_argument
     |> result.then(parse_argument)
     |> result.then(tokenize)
     |> result.then(validate_tokens)
