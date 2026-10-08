@@ -20,7 +20,7 @@ fn pad_equation(equation: List(MonomialType)) {
 
   let padded_equation =
     all_degrees
-    |> list.map(fn (degree) {
+    |> list.map(fn(degree) {
       case dict.get(monomial_map, degree) {
         Ok(value) -> value
         Error(_) -> Monomial(0.0, degree)
